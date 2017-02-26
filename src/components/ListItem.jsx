@@ -1,4 +1,4 @@
-const module = require('react');
+const React = require('react');
 
 var ListItem = React.createClass({
   render:function() {
@@ -10,4 +10,4 @@ var ListItem = React.createClass({
   }
 });
 
-export ListItem;
+module.exports = ListItem;

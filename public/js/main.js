@@ -20487,22 +20487,19 @@ module.exports = traverseAllChildren;
 module.exports = require('./lib/React');
 
 },{"./lib/React":155}],178:[function(require,module,exports){
-var React = require('react');
-var ListItem = require('./ListItem.jsx');
-
-var ingredients = [{ "id": 1, "text": "anand" }, { "id": 2, "text": "nehazaveri" }];
-
+const React = require('react');
+const ListItem = require('./ListItem.jsx');
 var List = React.createClass({
   displayName: 'List',
 
   render: function () {
-    var listItems = ingredients.map(function (item) {
-      return React.createElement(ListItem, { key: item.id, ingredient: item.text });
-    });
+    var createItem = function (text, index) {
+      return React.createElement(ListItem, { key: index + text, text: text });
+    };
     return React.createElement(
       'ul',
       null,
-      listItems
+      this.props.items.map(createItem)
     );
   }
 });
@@ -20510,7 +20507,8 @@ var List = React.createClass({
 module.exports = List;
 
 },{"./ListItem.jsx":179,"react":177}],179:[function(require,module,exports){
-var React = require('react');
+const React = require('react');
+
 var ListItem = React.createClass({
   displayName: 'ListItem',
 
@@ -20521,7 +20519,7 @@ var ListItem = React.createClass({
       React.createElement(
         'h4',
         null,
-        this.props.ingredient
+        this.props.text
       )
     );
   }
@@ -20530,10 +20528,59 @@ var ListItem = React.createClass({
 module.exports = ListItem;
 
 },{"react":177}],180:[function(require,module,exports){
+const List = require('./List.jsx');
+const React = require('react');
+
+var ListManager = React.createClass({
+  displayName: 'ListManager',
+
+
+  getInitialState: function () {
+    return { items: [], newItemText: '' };
+  },
+
+  handleSubmit: function (e) {
+    e.preventDefault();
+    var currentItems = this.state.items;
+    currentItems.push(this.state.newItemText);
+    this.setState({ items: currentItems, newItemText: '' });
+  },
+
+  onChange: function (e) {
+    this.setState({ newItemText: e.target.value });
+  },
+
+  render: function () {
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(
+        'h3',
+        null,
+        this.props.title
+      ),
+      React.createElement(
+        'form',
+        { onSubmit: this.handleSubmit },
+        React.createElement('input', { onChange: this.onChange, value: this.state.newItemText }),
+        React.createElement(
+          'button',
+          null,
+          'Add'
+        )
+      ),
+      React.createElement(List, { items: this.state.items })
+    );
+  }
+});
+
+module.exports = ListManager;
+
+},{"./List.jsx":178,"react":177}],181:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
-var List = require('./components/List.jsx');
+var ListManager = require('./components/ListManager.jsx');
 
-ReactDOM.render(React.createElement(List, null), document.getElementById('ingredients'));
+ReactDOM.render(React.createElement(ListManager, { title: 'Ingredients' }), document.getElementById('ingredients'));
 
-},{"./components/List.jsx":178,"react":177,"react-dom":26}]},{},[180]);
+},{"./components/ListManager.jsx":180,"react":177,"react-dom":26}]},{},[181]);
